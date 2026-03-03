@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dado de 20 Lados</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .dice {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            font-size: 80px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            user-select: none;
+        }
+        
+        .dice:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+        
+        .dice:active {
+            transform: scale(0.95);
+        }
+        
+        .dice.rolling {
+            animation: roll 0.5s ease-in-out;
+        }
+        
+        @keyframes roll {
+            0%, 100% { transform: rotateX(0) rotateY(0); }
+            25% { transform: rotateX(360deg) rotateY(180deg); }
+            50% { transform: rotateX(180deg) rotateY(360deg); }
+            75% { transform: rotateX(360deg) rotateY(180deg); }
+        }
+        
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .button {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .button:hover {
+            background: #764ba2;
+        }
+        
+        .button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎲 Dado de 20 Lados</h1>
+        <div class="dice" id="dice">20</div>
+        <div class="result" id="result"></div>
+        <button class="button" id="rollBtn">Rolar Dado</button>
+    </div>
+
+    <script>
+        const dice = document.getElementById('dice');
+        const rollBtn = document.getElementById('rollBtn');
+        const result = document.getElementById('result');
+        let isRolling = false;
+
+        function rollDice() {
+            if (isRolling) return;
+            
+            isRolling = true;
+            dice.classList.add('rolling');
+            result.textContent = '';
+            
+            // Anima números aleatórios durante a rolagem
+            let rollCount = 0;
+            const rollInterval = setInterval(() => {
+                dice.textContent = Math.floor(Math.random() * 20) + 1;
+                rollCount++;
+                
+                if (rollCount > 10) {
+                    clearInterval(rollInterval);
+                    
+                    // Resultado final
+                    const finalResult = Math.floor(Math.random() * 20) + 1;
+                    dice.textContent = finalResult;
+                    dice.classList.remove('rolling');
+                    result.textContent = `Resultado: ${finalResult}`;
+                    isRolling = false;
+                }
+            }, 50);
+        }
+
+        // Click no dado ou no botão
+        dice.addEventListener('click', rollDice);
+        rollBtn.addEventListener('click', rollDice);
+        
+        // Também permite pressionar Enter
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') rollDice();
+        });
+    </script>
+</body>
+</html>
